@@ -1,0 +1,17 @@
+# built binaries
+demo1
+demo2
+demo2-asan
+e1
+e2
+e3
+.check_build
+
+# object files, debug info
+*.o
+*.dSYM/
+
+# python
+__pycache__/
+*.pyc
+part2
