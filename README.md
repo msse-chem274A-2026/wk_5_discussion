@@ -4,7 +4,7 @@
 composition.
 
 Work together in your group and put your answers in the class Google Slides
-presentation, on your group's page. Make sure everyone understands the code.
+presentation, on your group's page. 
 
 ## Setup
 
@@ -14,9 +14,6 @@ cd wk_5_discussion
 make check      # prints your compiler version and does a test compile
 make            # builds the two demos and Part 2
 ```
-
-Nothing is submitted from this repo. Everything is C++17 and the standard
-library — nothing to install beyond what you set up in week 1.
 
 ---
 
