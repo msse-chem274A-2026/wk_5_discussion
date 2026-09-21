@@ -3,15 +3,16 @@
 #   make            build everything students need
 #   make demo1      what a copy costs
 #   make demo2      reference or pointer?
+#   make warmup     Warm-up -- pointer syntax
 #   make part2     Part 2 -- copy constructors
 #   make check      confirm your toolchain works before the session
 #   make clean
 
 CXX      = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -g -O2
+CXXFLAGS = -std=c++17 -Wall -Wextra -Wno-unused-function -g -O2
 
 DEMOS     = demo1 demo2
-EXERCISES = part2
+EXERCISES = warmup part2
 
 all: $(DEMOS) $(EXERCISES)
 
@@ -26,6 +27,9 @@ demo2: demo2_refs_pointers.cpp
 # reports the bug and exits non-zero. (No ASAN_OPTIONS needed.)
 demo2-asan: demo2_refs_pointers.cpp
 	$(CXX) $(CXXFLAGS) -O0 -fsanitize=address -o demo2-asan demo2_refs_pointers.cpp
+
+warmup: warmup_pointers.cpp
+	$(CXX) $(CXXFLAGS) -o warmup warmup_pointers.cpp
 
 part2: part2_copies.cpp
 	$(CXX) $(CXXFLAGS) -o part2 part2_copies.cpp
