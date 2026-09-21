@@ -4,7 +4,7 @@
 composition.
 
 Work together in your group and put your answers in the class Google Slides
-presentation, on your group's page. Make sure everyone understands the code.
+presentation, on your group's page. 
 
 ## Setup
 
@@ -15,8 +15,6 @@ make check      # prints your compiler version and does a test compile
 make            # builds the two demos and Part 2
 ```
 
-Nothing is submitted from this repo. Everything is C++17 and the standard
-library — nothing to install beyond what you set up in week 1.
 
 ---
 
@@ -123,14 +121,6 @@ is a marked task in the file with three decisions, one per member.
 5. `CarDesign` holds no pointers and allocates no memory, and the compiler's
    copy was *still* wrong. So "write a copy constructor when the class owns
    memory" is not the whole rule. What is the fuller version?
-
-> **Optional, if you want to see this in a real library.** Last week you read
-> Psi4's [`ShellInfo`](https://github.com/psi4/psi4/blob/1fb8968fe95e6f8c3c17b94ddd3b277e83965d67/psi4/src/psi4/libmints/gshell.h#L56),
-> which has no copy constructor and no destructor — its members are
-> `std::vector`s that copy themselves correctly.
-> [`Matrix`](https://github.com/psi4/psi4/blob/1fb8968fe95e6f8c3c17b94ddd3b277e83965d67/psi4/src/psi4/libmints/matrix.h#L100)
-> from the same library declares both, because it holds a raw `double***` and
-> owns that memory.
 
 ---
 
