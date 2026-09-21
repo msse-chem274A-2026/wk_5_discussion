@@ -25,8 +25,7 @@ r = 4;           // r is just x, so no symbol needed. does the same thing as *p 
 
 For each snippet: **does it compile?** If it does, what is `a` at the end? If it
 does not, **is there anywhere you could add a single `*` or `&` to make it
-compile?** (Sometimes the answer is no.) Predict first, then write a short
-program and check.
+compile?** (Sometimes the answer is no.) 
 
 1. ```cpp
    int a = 1;
