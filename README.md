@@ -6,6 +6,8 @@ composition.
 Work together in your group and put your answers in the class Google Slides
 presentation, on your group's page. 
 
+
+
 ## Setup
 
 ```bash
@@ -17,6 +19,79 @@ make            # builds the two demos and Part 2
 
 
 ---
+
+## Warm-up — what `&` and `*` mean
+
+`*` and `&` each do **two different jobs**, and *where you write them* tells you
+which one.
+
+| you write | where | read it as |
+|---|---|---|
+| `int * p` | in a declaration, after a type | "`p` is a **pointer to** an `int`" |
+| `*p` | in an expression, before a pointer | "the `int` **at** `p`" (this is called *dereferencing*) |
+| `int & r = x` | in a declaration, after a type | "`r` is a **reference to** an `int` — another name for `x`" |
+| `&x` | in an expression, before a variable | "the **address of** `x`" |
+
+
+
+```cpp
+int x = 5;
+int * p = &x;    // "p is a pointer to an integer, set to the address of x"
+int & r = x;     // "r is a reference to int: another name for x"
+*p = 4;          // "the int at p becomes 4"
+r = 4;           // r is just x, so no symbol needed. does the same thing as *p = 4
+```
+
+
+### Exercise
+
+For each snippet: **does it compile?** If it does, what is `a` at the end? If it
+does not, **is there anywhere you could add a single `*` or `&` to make it
+compile?** (Sometimes the answer is no.) 
+
+1. ```cpp
+   int a = 1;
+   int * p = a;
+   ```
+
+1. ```cpp
+   void bump(int n) { n = n + 1; }
+
+   int a = 1;
+   bump(a); // how can we modify this so a is increased by 1?
+   ```
+
+1. ```cpp
+   int a = 1;
+   int * p = &a;
+   p = 4; 
+   ```
+
+1. ```cpp
+   int a = 1;
+   double * p = &a;
+   ```
+
+1. ```cpp
+   void bump(int * n) { *n = *n + 1; }
+
+   int a = 1;
+   bump(a);
+   ```
+
+1. ```cpp
+   int a = 1;
+   int * p = &a;
+   a = p; 
+   ```
+
+**Questions**
+
+W1. Snippet 2 compiles, but `bump` was meant to add one to `a`. Where does the
+    one `&` go to fix it? Is it the same kind of `&` as the fix for snippet 1?
+
+W2. Snippet 4 has no fix. What is wrong with it that no `*` or `&` can change?
+
 
 ## Part 1 — References and `const`
 
@@ -97,96 +172,18 @@ A **copy constructor** runs whenever a new object is made from an existing one.
 The `CarDesign` class in this file prints `COPY` every time it runs, so you can
 see exactly when that happens.
 
-### Part A — when does a copy happen?
+### When does a copy happen?
 
 `main` has four snippets; only the first is uncommented. For each one,
 **predict how many `COPY` lines it prints**, then uncomment it, rebuild, and
 check. One at a time.
 
-### Part B — what should a copy contain?
-
-Uncomment the Part B block at the bottom of `main`. A lead design has been
-through three tests, and you make a variant by copying it and renaming it.
-
-Run it and look at the table it prints. Then fix the copy constructor — there
-is a marked task in the file with three decisions, one per member.
-
 **Questions**
 
 3. Snippets 3 and 4 look different — one uses `(lead)` and one uses `= lead` —
    but both print a `COPY`. Why are they the same thing?
-4. In Part B, what was wrong with the copy the compiler wrote for you? It
-   compiled without a single warning — what does that tell you about this kind
-   of bug?
-5. `CarDesign` holds no pointers and allocates no memory, and the compiler's
+4. `CarDesign` holds no pointers and allocates no memory, and the compiler's
    copy was *still* wrong. So "write a copy constructor when the class owns
    memory" is not the whole rule. What is the fuller version?
 
 ---
-
-## Part 3 — Inheritance or composition?
-
-Discussion only — no code to write.
-
-When you build a class out of another class, there are two ways to do it, and
-English tells you which one you want.
-
-### The two relationships
-
-**is-a** — *inheritance*. One thing is a **kind of** another thing.
-
-> A dog **is a** kind of animal.
->
-> ```cpp
-> class Dog : public Animal { ... };    // Dog inherits from Animal
-> ```
-
-**has-a** — *composition*. One thing **contains** another thing.
-
-> A car **has an** engine. A car is not a kind of engine.
->
-> ```cpp
-> class Car { Engine engine_; ... };    // Engine is a member of Car
-> ```
-
-### How to tell them apart
-
-Say the two words out loud with "is a" between them, then with "has a".
-Whichever one sounds like English is your answer.
-
-- "A dog is a animal" ✓ &nbsp;&nbsp; "A dog has a animal" ✗ → **is-a**
-- "A car is a engine" ✗ &nbsp;&nbsp; "A car has a engine" ✓ → **has-a**
-
-And that tells you what to write:
-
-| | you write |
-|---|---|
-| **is-a** | a subclass — `class Dog : public Animal` |
-| **has-a** | a member variable — `Engine engine_;` inside `Car` |
-
-**Question**
-
-6. For each pair, say whether it is **is-a** or **has-a**, and then say what you
-   would write in C++ — a subclass, or a member variable?
-
-   | | |
-   |---|---|
-   | a student | a person |
-   | a house | a door |
-   | a 2nd-generation design | a design |
-   | a screening protocol | a safety filter |
-
----
-
-## Troubleshooting
-
-**`g++: No such file or directory`** — on macOS `g++` is usually wired to
-clang and works; if not, `make CXX=clang++`. On Linux/WSL install it the same
-way you did in week 1. On Windows, work inside WSL.
-
-## What is in this repo
-
-| File | |
-|---|---|
-| `part2_copies.cpp` | **Part 2** — you edit this |
-| `demo1_cost.cpp`, `demo2_refs_pointers.cpp` | the two demos from the front of the session — rerun them any time |
