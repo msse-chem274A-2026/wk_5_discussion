@@ -3,7 +3,6 @@
 #   make            build everything students need
 #   make demo1      what a copy costs
 #   make demo2      reference or pointer?
-#   make warmup     Warm-up -- pointer syntax
 #   make part2     Part 2 -- copy constructors
 #   make check      confirm your toolchain works before the session
 #   make clean
@@ -12,7 +11,7 @@ CXX      = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Wno-unused-function -g -O2
 
 DEMOS     = demo1 demo2
-EXERCISES = warmup part2
+EXERCISES = part2
 
 all: $(DEMOS) $(EXERCISES)
 
