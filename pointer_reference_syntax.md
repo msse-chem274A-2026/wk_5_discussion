@@ -68,7 +68,4 @@ compile?** (Sometimes the answer is no.)
 W1. Snippet 2 compiles, but `bump` was meant to add one to `a`. Where does the
     one `&` go to fix it? Is it the same kind of `&` as the fix for snippet 1?
 
-W2. Snippets 3 and 6 both need a `*` in front of `p`. In one, the `*` *writes*
-    through the pointer; in the other it *reads* through it. Which is which?
-
-W3. Snippet 4 has no fix. What is wrong with it that no `*` or `&` can change?
+W2. Snippet 4 has no fix. What is wrong with it that no `*` or `&` can change?
