@@ -50,10 +50,10 @@ int main()
     // { CarDesign lead("CD19-BBz"); screen_by_const_ref(lead); }
 
     // std::cout << "\n--- snippet 3: make a variant from the lead ---\n";
-    // { CarDesign lead("CD19-BBz"); CarDesign variant(lead); variant.print();}
+    // { CarDesign lead("CD19-BBz"); CarDesign variant(lead); lead.print(); variant.print(); }
 
     // std::cout << "\n--- snippet 4: written with = instead ---\n";
-    // { CarDesign lead("CD19-BBz"); CarDesign variant = lead; variant.print();}
+    // { CarDesign lead("CD19-BBz"); CarDesign variant = lead; lead.print(); variant.print(); }
 
     // std::cout << "\n--- snippet 5: just another name for the lead ---\n";
     // { CarDesign lead("CD19-BBz"); const CarDesign & same = lead; same.print(); }

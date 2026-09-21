@@ -169,19 +169,19 @@ d.get_binder_2() = "SJ25C1";
 **File:** `part2_copies.cpp` · **Build:** `make part2 && ./part2`
 
 A **copy constructor** runs whenever a new object is made from an existing one.
-The `CarDesign` class in this file prints `COPY` every time it runs, so you can
-see exactly when that happens.
+The `CarDesign` class in this file prints `I COPIED ...` every time its copy
+constructor runs, so you can see exactly when that happens.
 
 ### When does a copy happen?
 
-`main` has four snippets; only the first is uncommented. For each one,
-**predict how many `COPY` lines it prints**, then uncomment it, rebuild, and
-check. One at a time.
+`main` has six snippets; only the first is uncommented. For each one,
+**predict how many copies it makes** (each one prints an `I COPIED` line),
+then uncomment it, rebuild, and check. One at a time.
 
 **Questions**
 
 3. Snippets 3 and 4 look different — one uses `(lead)` and one uses `= lead` —
-   but both print a `COPY`. Why are they the same thing?
+   but both make a copy. Why are they the same thing?
 4. `CarDesign` holds no pointers and allocates no memory, and the compiler's
    copy was *still* wrong. So "write a copy constructor when the class owns
    memory" is not the whole rule. What is the fuller version?
