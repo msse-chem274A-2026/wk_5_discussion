@@ -28,9 +28,6 @@ demo2: demo2_refs_pointers.cpp
 demo2-asan: demo2_refs_pointers.cpp
 	$(CXX) $(CXXFLAGS) -O0 -fsanitize=address -o demo2-asan demo2_refs_pointers.cpp
 
-warmup: warmup_pointers.cpp
-	$(CXX) $(CXXFLAGS) -o warmup warmup_pointers.cpp
-
 part2: part2_copies.cpp
 	$(CXX) $(CXXFLAGS) -o part2 part2_copies.cpp
 
