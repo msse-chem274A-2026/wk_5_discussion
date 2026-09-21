@@ -1,5 +1,3 @@
----
-
 ## Warm-up — what `&` and `*` mean
 
 `*` and `&` each do **two different jobs**, and *where you write them* tells you
@@ -75,5 +73,3 @@ W2. Snippets 3 and 6 both need a `*` in front of `p`. In one, the `*` *writes*
     through the pointer; in the other it *reads* through it. Which is which?
 
 W3. Snippet 4 has no fix. What is wrong with it that no `*` or `&` can change?
-
----
