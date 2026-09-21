@@ -143,28 +143,52 @@ declares both:
 
 Discussion only — no code.
 
-A screening protocol does two things: it **rejects** any design whose
-off-target risk is above a threshold, and it **scores** the ones that survive.
-Those two vary *independently*:
+### The two relationships
+
+Module 2.3 gave you these:
+
+- **is-a** — *inheritance*. B is a kind of A, so a B can stand in wherever an A
+  is expected.
+- **has-a** — *composition*. A holds a B and hands part of its job to it.
+- …and sometimes **neither**, which is worth being able to spot.
+
+### Worked examples
+
+These three are from module 2.3, so you have met them before. Note the shape of
+the justification — that is what we want for each of yours.
+
+| relationship | answer | why |
+|---|---|---|
+| a SQLAlchemy `User` / `Base` | **is-a** | `User` *is* a SQLAlchemy model. Inheriting from `Base` is what makes it one — here the inheritance *is* the API. |
+| a scikit-learn `Pipeline` / a `StandardScaler` | **has-a** | A pipeline is not a kind of scaler. It *holds* one and calls it before the model. Swap the scaler and the pipeline still works. |
+| a design / the design it was copied from | **neither** | That is *lineage* — a fact you record about where it came from. Not a part it contains, not a type it specializes. |
+
+**The test:** ask whether the second thing is **what the first thing is**, or
+**something the first thing holds**. If it is neither, say so.
+
+### The setup for your four
+
+A screening protocol does two things: it **rejects** any design whose off-target
+risk is above a threshold, and it **scores** the ones that survive. Those two
+vary *independently*:
 
 - three risk thresholds — strict, standard, permissive
 - three potency models — 4-1BB-weighted, CD28-weighted, shape-matched
 
-"Conservative" is strict + 4-1BB. "Aggressive" is standard + CD28. Any
-threshold can pair with any model.
-
-Two ways to build it:
-
-- **Inheritance** — a base `ScreeningProtocol`, one subclass per pairing you
-  offer.
-- **Composition** — one `ScreeningProtocol` holding a filter object and a model
-  object, paired differently each time.
+"Conservative" is strict + 4-1BB. "Aggressive" is standard + CD28. Any threshold
+can pair with any model.
 
 **Question**
 
-6. Count the classes each approach needs to offer every pairing, for 3
-   thresholds × 3 models. Now add a fourth potency model — what happens to each
-   count?
+6. Same job as the worked examples, for these four. One of them is genuinely
+   arguable — say which, and give both readings before you pick one.
+
+   | | |
+   |---|---|
+   | a 2nd-generation design | a design |
+   | a design | a booster part |
+   | a `ScreeningProtocol` | a `SafetyFilter` |
+   | a "conservative" protocol | a `ScreeningProtocol` |
 
 ---
 
