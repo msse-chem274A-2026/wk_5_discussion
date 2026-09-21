@@ -4,7 +4,7 @@
 composition.
 
 Work together in your group and put your answers in the class Google Slides
-presentation, on your group's page. 
+presentation, on your group's page. Make sure everyone understands the code.
 
 ## Setup
 
@@ -14,6 +14,9 @@ cd wk_5_discussion
 make check      # prints your compiler version and does a test compile
 make            # builds the two demos and Part 2
 ```
+
+Nothing is submitted from this repo. Everything is C++17 and the standard
+library — nothing to install beyond what you set up in week 1.
 
 ---
 
@@ -140,20 +143,28 @@ declares both:
 
 Discussion only — no code.
 
-A screening protocol is a **safety filter** (reject anything above a risk
-threshold) plus a **potency model** (score what survives). The team needs three
-protocols now — conservative, standard, aggressive — and will want more later.
+A screening protocol does two things: it **rejects** any design whose
+off-target risk is above a threshold, and it **scores** the ones that survive.
+Those two vary *independently*:
 
-- **Inheritance** — a base `ScreeningProtocol` class, one subclass per protocol.
-- **Composition** — one class that *has a* filter object and *has a* model
-  object, combined differently for each protocol.
+- three risk thresholds — strict, standard, permissive
+- three potency models — 4-1BB-weighted, CD28-weighted, shape-matched
+
+"Conservative" is strict + 4-1BB. "Aggressive" is standard + CD28. Any
+threshold can pair with any model.
+
+Two ways to build it:
+
+- **Inheritance** — a base `ScreeningProtocol`, one subclass per pairing you
+  offer.
+- **Composition** — one `ScreeningProtocol` holding a filter object and a model
+  object, paired differently each time.
 
 **Question**
 
-6. Work out how many classes each approach needs for 3 risk thresholds × 3
-   potency models, then for 3 × 4. Which grows faster? Which handles a
-   protocol chosen at run time from a config file? And name one thing
-   inheritance genuinely does better here — "nothing" is not the answer.
+6. Count the classes each approach needs to offer every pairing, for 3
+   thresholds × 3 models. Now add a fourth potency model — what happens to each
+   count?
 
 ---
 
