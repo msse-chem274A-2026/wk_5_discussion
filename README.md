@@ -1,4 +1,4 @@
-# Discussion 5 — Copy Constructors, References, and Class Design
+# Discussion 3: Copy Constructors, References, and Class Design
 
 **Topics:** C++ copy constructors, references and `const`, inheritance vs
 composition.
