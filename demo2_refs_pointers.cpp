@@ -28,8 +28,17 @@ class Domain
 };
 
 // One CAR design. It does not OWN its parts -- the registry does. It points
-// at them. costim_ is a pointer because a 1st-generation design has no
-// booster part at all, and a reference cannot be absent.
+// at them.
+//
+// Look at the CONSTRUCTOR, not the members. Both members are pointers (a
+// reference member would make this class awkward to copy), but the parameters
+// differ on purpose:
+//
+//     const Domain & binder    always present -> a reference. You CANNOT
+//                              pass nothing: there is no null reference, so
+//                              the compiler refuses a design with no binder.
+//     const Domain * costim    may be absent  -> a pointer, and nullptr is
+//                              a legitimate value meaning 1st generation.
 class CarConstruct
 {
   private:
@@ -82,13 +91,19 @@ int main()
     CarConstruct gen1("CD19-z", fmc63, nullptr);
     gen1.print();
 
+    // Uncomment to see the compiler refuse a design with no binder:
+    // CarConstruct bad("no-binder", nullptr, &bb);
+
     std::cout << "\n  2nd generation -- exactly one:\n";
     CarConstruct gen2("CD19-BBz", fmc63, &bb);
     gen2.print();
 
-    std::cout << "\n  binder_ is always present, so it could have been a reference.\n"
-              << "  costim_ could not: a reference has no 'absent' value. The biology\n"
-              << "  picked the pointer, not style.\n";
+    std::cout << "\n  The constructor takes them differently:\n\n"
+              << "      const Domain & binder    a REFERENCE -- always there\n"
+              << "      const Domain * costim    a POINTER   -- may be nullptr\n\n"
+              << "  A pointer can be nullptr. A reference always refers to something.\n"
+              << "  So the compiler will not let you build a design with no binder:\n"
+              << "      CarConstruct bad(\"oops\", nullptr, &bb);   // will not compile\n";
 
     std::cout << "\n=== (b) copying a design does not copy the registry ===\n\n";
     std::cout << "  copying gen2 (watch for COPY Domain lines -- there are none):\n";
@@ -103,7 +118,11 @@ int main()
     std::cout << "\n  now make it a real variant -- repoint, do not edit:\n";
     gen2_copy.set_costim(&cd28);
     gen2_copy.print();
-    std::cout << "    costim in gen2             = " << gen2.get_costim() << "   <- untouched\n";
+    std::cout << "    &cd28                      = " << &cd28 << "\n";
+    std::cout << "    costim in the copy         = " << gen2_copy.get_costim()
+              << "   <- now points at CD28\n";
+    std::cout << "    costim in gen2             = " << gen2.get_costim()
+              << "   <- untouched\n";
     std::cout << "\n  'Deep copy' is not a rule. It answers a question: does this object\n"
               << "  own that one? Here it does not, and cloning would be the bug.\n";
 
@@ -113,8 +132,11 @@ int main()
     Domain good = make_scratch_FIXED();
     std::cout << "  FIXED returned: " << good.get_name() << "\n";
 
-    std::cout << "\n  now the broken one. Plausible answer, garbage, or a crash --\n"
-              << "  all three are the same bug.\n";
+    std::cout << "\n  Now the broken one -- it returns a reference to a local, which is\n"
+              << "  gone by the time we read it.\n"
+              << "  >>> If nothing prints after this line, the program crashed.\n"
+              << "  >>> A crash is the LUCKY outcome. The dangerous one is when it\n"
+              << "  >>> prints something that looks fine.\n";
     std::cout.flush();
 
     const Domain & ghost = make_scratch_BROKEN();

@@ -50,6 +50,12 @@ int main()
 
     const int N = 100000;
 
+    std::cout << "\n  Two functions, identical bodies, one parameter different:\n"
+              << "      double risk_by_value    (      TissueAtlas   atlas, double affinity)\n"
+              << "      double risk_by_const_ref(const TissueAtlas & atlas, double affinity)\n"
+              << "\n  The '&' means 'use the caller's object'. Without it, the\n"
+              << "  function gets its own copy.\n";
+
     std::cout << "\n  sizeof(TissueAtlas)        = " << sizeof(TissueAtlas) << " bytes\n";
     std::cout << "  sizeof(const TissueAtlas&) = " << sizeof(const TissueAtlas *)
               << " bytes  (just an address)\n\n";
@@ -69,12 +75,14 @@ int main()
               << double(sizeof(TissueAtlas)) * N / 1.0e9 << " GB copied)\n";
     std::cout << "    by const ref: " << secs_ref << " s   (0 GB copied)\n";
 
-    std::cout << "\n  (total = " << total << ", printed so the loops survive -O2)\n";
-    std::cout << "\n  Same answer. Same arithmetic. One '&'.\n"
-              << "  And the by-value version is not WRONG -- the compiler's copy is\n"
-              << "  perfectly correct. It just moved " << int(double(sizeof(TissueAtlas)) * N / 1.0e9)
-              << " GB to answer a question that\n"
-              << "  never touched the original.\n\n";
+    std::cout << "\n  Both loops computed the same total (" << total << ").\n";
+
+    std::cout << "\n  Same answer. Same arithmetic. One '&'.\n\n"
+              << "  And the by-value version is not WRONG -- the compiler's copy of the\n"
+              << "  atlas is perfectly correct. It just moved "
+              << double(sizeof(TissueAtlas)) * N / 1.0e9
+              << " GB of memory to answer\n"
+              << "  a question that never touched the original.\n\n";
 
     return 0;
 }

@@ -55,31 +55,36 @@ class CarDesign
 
 static void screen_by_value(CarDesign d) { d.print(); }
 void screen_by_const_ref(const CarDesign & d) { d.print(); }
-CarDesign make_variant() { CarDesign d("CD19-28z"); return d; }
 
 int main()
 {
     // ---------------------------------------------------------- PART A
-    // Predict how many COPY lines each snippet prints, THEN uncomment it,
-    // rebuild, and check. One at a time.
+    // Four snippets. For each one, predict how many COPY lines it prints,
+    // THEN uncomment it, rebuild, and check. One at a time.
 
-    std::cout << "--- snippet 1: screen a design, by value ---\n";
-    { CarDesign lead("CD19-BBz"); screen_by_value(lead); }
+    std::cout << "--- 1: pass a design to a function BY VALUE ---\n";
+    {
+        CarDesign lead("CD19-BBz");
+        screen_by_value(lead);
+    }
 
-    // std::cout << "--- snippet 2: the same, by const reference ---\n";
-    // { CarDesign lead("CD19-BBz"); screen_by_const_ref(lead); }
+    // std::cout << "--- 2: the same function, BY CONST REFERENCE ---\n";
+    // {
+    //     CarDesign lead("CD19-BBz");
+    //     screen_by_const_ref(lead);
+    // }
 
-    // std::cout << "--- snippet 3: make a variant from the lead ---\n";
-    // { CarDesign lead("CD19-BBz"); CarDesign variant(lead); }
+    // std::cout << "--- 3: make a second design from the first ---\n";
+    // {
+    //     CarDesign lead("CD19-BBz");
+    //     CarDesign variant(lead);
+    // }
 
-    // std::cout << "--- snippet 4: written with = instead ---\n";
-    // { CarDesign lead("CD19-BBz"); CarDesign variant = lead; }
-
-    // std::cout << "--- snippet 5: just another name for the lead ---\n";
-    // { CarDesign lead("CD19-BBz"); const CarDesign & same = lead; same.print(); }
-
-    // std::cout << "--- snippet 6: a factory function ---\n";
-    // { CarDesign variant = make_variant(); }
+    // std::cout << "--- 4: the same thing, written with = ---\n";
+    // {
+    //     CarDesign lead("CD19-BBz");
+    //     CarDesign variant = lead;
+    // }
 
     // ---------------------------------------------------------- PART B
     // Uncomment this block once you get to Part B.

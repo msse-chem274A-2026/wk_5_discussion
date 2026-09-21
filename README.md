@@ -20,81 +20,74 @@ library — nothing to install beyond what you set up in week 1.
 
 ---
 
-## Part 1 — References, `const`, and aliasing
+## Part 1 — References and `const`
 
-Two variables are **aliased** when they refer to the same memory: change one
-and the other changes too.
-
-```cpp
-double a = 10;
-double & b = a;   // b and a are aliased
-```
-
-`const` appears in two positions and they protect two different things:
-
-```cpp
-const std::string & get_binder_2() const;
-//  ^^^^^                          ^^^^^
-//  (1) don't modify what           (2) don't modify the object
-//      is returned                     this was called on
-```
-
-A `const` object may only call functions carrying the second kind.
-
-Here is a CAR design with three ways of getting at the same member:
+When you ask an object for one of its members, you can get back **a copy** of
+it, or **the member itself**. Which one you get changes whether writing to it
+changes the object.
 
 ```cpp
 class CarDesign
 {
    private:
-      std::string binder_;   // which scFv this design uses
+      std::string binder_;            // which binder this design uses
 
    public:
       CarDesign(const std::string & b) : binder_(b) {}
 
-      std::string         get_binder_1() const { return binder_; }  // by value
-      const std::string & get_binder_2() const { return binder_; }  // const reference
-      std::string &       get_binder_3()       { return binder_; }  // reference
+      std::string        get_binder_1()       { return binder_; }  // a COPY
+      std::string &      get_binder_2()       { return binder_; }  // the MEMBER ITSELF
+      const std::string & get_binder_3() const { return binder_; } // the member, READ-ONLY
 };
 ```
 
-**Exercise.** Each snippet tries to swap the binder from FMC63 to SJ25C1. Will
-it compile? If it does, what is `binder_` at the end, and which variables are
-aliased? Predict first, then write a short program and check.
+The `&` is what makes the difference. `get_binder_1` hands you a copy; change
+it and the design is untouched. `get_binder_2` hands you the member itself;
+change it and you have changed the design. `get_binder_3` hands you the member
+but marks it `const`, so you may read it and not write it.
+
+### Two places `const` shows up
 
 ```cpp
-CarDesign d("FMC63");                     // 1
+const std::string & get_binder_3() const { return binder_; }
+//  ^^^^^ (1)                      ^^^^^ (2)
+```
+
+- **Before the type** — you may not change *what is handed back*.
+- **After the parentheses** — this function does not change *the object it was
+  called on*. Only functions marked this way can be called on a `const` object.
+
+### Exercise
+
+Each snippet tries to change the design's binder from FMC63 to SJ25C1.
+
+**For each one: does it compile? And is `binder_` FMC63 or SJ25C1 at the end?**
+Predict first, then write a short program and check.
+
+```cpp
+CarDesign d("FMC63");                    // 1
 std::string s = d.get_binder_1();
 s = "SJ25C1";
 ```
 ```cpp
-CarDesign d("FMC63");                     // 2
-const std::string & s = d.get_binder_2();
-s = "SJ25C1";
+CarDesign d("FMC63");                    // 2
+d.get_binder_2() = "SJ25C1";
 ```
 ```cpp
-CarDesign d("FMC63");                     // 3
+CarDesign d("FMC63");                    // 3
 d.get_binder_3() = "SJ25C1";
 ```
 ```cpp
-CarDesign d("FMC63");                     // 4
-d.get_binder_1() = "SJ25C1";
-```
-```cpp
-const CarDesign d("FMC63");               // 5
-std::string s = d.get_binder_2();
-```
-```cpp
-const CarDesign d("FMC63");               // 6
-d.get_binder_3() = "SJ25C1";
+const CarDesign d("FMC63");              // 4
+d.get_binder_2() = "SJ25C1";
 ```
 
 **Questions**
 
-1. Exactly one snippet actually swapped the binder. Which one — and what
-   happened in the ones that *looked* like they should have?
-2. Explain what the `const` after the parameter list does, and why it is not
-   the same thing as the `const` in `const std::string &`.
+1. Only one of the four actually changed the binder. Which one, and what was
+   different about it?
+2. Snippets 3 and 4 both fail, but for different reasons. What is each one's
+   reason?
 
 ---
 
@@ -102,93 +95,96 @@ d.get_binder_3() = "SJ25C1";
 
 **File:** `part2_copies.cpp` · **Build:** `make part2 && ./part2`
 
-### Part A — how often do copies happen?
+A **copy constructor** runs whenever a new object is made from an existing one.
+The `CarDesign` class in this file prints `COPY` every time it runs, so you can
+see exactly when that happens.
 
-The `CarDesign` class in this file prints a line every time it is copied.
-`main` has six snippets; only the first is uncommented. For each one,
+### Part A — when does a copy happen?
+
+`main` has four snippets; only the first is uncommented. For each one,
 **predict how many `COPY` lines it prints**, then uncomment it, rebuild, and
-check.
+check. One at a time.
 
 ### Part B — what should a copy contain?
 
 Uncomment the Part B block at the bottom of `main`. A lead design has been
-through three tests; you make a variant by copying it and renaming.
+through three tests, and you make a variant by copying it and renaming it.
 
-Run it and read the table. Then fix the copy constructor — there is a marked
-task in the file and three decisions, one per member.
-
-### For reference
-
-Last week you read Psi4's `ShellInfo`, which has **no** copy constructor and
-**no** destructor. Compare it with `Matrix` from the same library, which
-declares both:
-
-- [`gshell.h`](https://github.com/psi4/psi4/blob/1fb8968fe95e6f8c3c17b94ddd3b277e83965d67/psi4/src/psi4/libmints/gshell.h#L56) — members are `std::vector<double>`
-- [`matrix.h`](https://github.com/psi4/psi4/blob/1fb8968fe95e6f8c3c17b94ddd3b277e83965d67/psi4/src/psi4/libmints/matrix.h#L100) — member is `double*** matrix_`
+Run it and look at the table it prints. Then fix the copy constructor — there
+is a marked task in the file with three decisions, one per member.
 
 **Questions**
 
-3. Snippet 6 returns a `CarDesign` from a function by value. How many copies
-   did you predict, and how many did you get? What does that say about the
-   advice "returning by value is expensive"?
-4. What was wrong with the compiler-generated copy in Part B? It compiled
-   without a single warning — what does that suggest about this kind of bug?
-5. `Matrix` needs a copy constructor because it owns memory. `CarDesign` owns
-   no memory at all and *still* needed one. So "does it own memory?" is not
-   the whole rule — what is the fuller version?
+3. Snippets 3 and 4 look different — one uses `(lead)` and one uses `= lead` —
+   but both print a `COPY`. Why are they the same thing?
+4. In Part B, what was wrong with the copy the compiler wrote for you? It
+   compiled without a single warning — what does that tell you about this kind
+   of bug?
+5. `CarDesign` holds no pointers and allocates no memory, and the compiler's
+   copy was *still* wrong. So "write a copy constructor when the class owns
+   memory" is not the whole rule. What is the fuller version?
+
+> **Optional, if you want to see this in a real library.** Last week you read
+> Psi4's [`ShellInfo`](https://github.com/psi4/psi4/blob/1fb8968fe95e6f8c3c17b94ddd3b277e83965d67/psi4/src/psi4/libmints/gshell.h#L56),
+> which has no copy constructor and no destructor — its members are
+> `std::vector`s that copy themselves correctly.
+> [`Matrix`](https://github.com/psi4/psi4/blob/1fb8968fe95e6f8c3c17b94ddd3b277e83965d67/psi4/src/psi4/libmints/matrix.h#L100)
+> from the same library declares both, because it holds a raw `double***` and
+> owns that memory.
 
 ---
 
 ## Part 3 — Inheritance or composition?
 
-Discussion only — no code.
+Discussion only — no code to write.
+
+When you build a class out of another class, there are two ways to do it, and
+English tells you which one you want.
 
 ### The two relationships
 
-Module 2.3 gave you these:
+**is-a** — *inheritance*. One thing is a **kind of** another thing.
 
-- **is-a** — *inheritance*. B is a kind of A, so a B can stand in wherever an A
-  is expected.
-- **has-a** — *composition*. A holds a B and hands part of its job to it.
-- …and sometimes **neither**, which is worth being able to spot.
+> A dog **is a** kind of animal.
+>
+> ```cpp
+> class Dog : public Animal { ... };    // Dog inherits from Animal
+> ```
 
-### Worked examples
+**has-a** — *composition*. One thing **contains** another thing.
 
-These three are from module 2.3, so you have met them before. Note the shape of
-the justification — that is what we want for each of yours.
+> A car **has an** engine. A car is not a kind of engine.
+>
+> ```cpp
+> class Car { Engine engine_; ... };    // Engine is a member of Car
+> ```
 
-| relationship | answer | why |
-|---|---|---|
-| a SQLAlchemy `User` / `Base` | **is-a** | `User` *is* a SQLAlchemy model. Inheriting from `Base` is what makes it one — here the inheritance *is* the API. |
-| a scikit-learn `Pipeline` / a `StandardScaler` | **has-a** | A pipeline is not a kind of scaler. It *holds* one and calls it before the model. Swap the scaler and the pipeline still works. |
-| a design / the design it was copied from | **neither** | That is *lineage* — a fact you record about where it came from. Not a part it contains, not a type it specializes. |
+### How to tell them apart
 
-**The test:** ask whether the second thing is **what the first thing is**, or
-**something the first thing holds**. If it is neither, say so.
+Say the two words out loud with "is a" between them, then with "has a".
+Whichever one sounds like English is your answer.
 
-### The setup for your four
+- "A dog is a animal" ✓ &nbsp;&nbsp; "A dog has a animal" ✗ → **is-a**
+- "A car is a engine" ✗ &nbsp;&nbsp; "A car has a engine" ✓ → **has-a**
 
-A screening protocol does two things: it **rejects** any design whose off-target
-risk is above a threshold, and it **scores** the ones that survive. Those two
-vary *independently*:
+And that tells you what to write:
 
-- three risk thresholds — strict, standard, permissive
-- three potency models — 4-1BB-weighted, CD28-weighted, shape-matched
-
-"Conservative" is strict + 4-1BB. "Aggressive" is standard + CD28. Any threshold
-can pair with any model.
+| | you write |
+|---|---|
+| **is-a** | a subclass — `class Dog : public Animal` |
+| **has-a** | a member variable — `Engine engine_;` inside `Car` |
 
 **Question**
 
-6. Same job as the worked examples, for these four. One of them is genuinely
-   arguable — say which, and give both readings before you pick one.
+6. For each pair, say whether it is **is-a** or **has-a**, and then say what you
+   would write in C++ — a subclass, or a member variable?
 
    | | |
    |---|---|
+   | a student | a person |
+   | a house | a door |
    | a 2nd-generation design | a design |
-   | a design | a booster part |
-   | a `ScreeningProtocol` | a `SafetyFilter` |
-   | a "conservative" protocol | a `ScreeningProtocol` |
+   | a screening protocol | a safety filter |
 
 ---
 
